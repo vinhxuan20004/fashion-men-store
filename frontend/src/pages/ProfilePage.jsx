@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { User, Lock, Save, Eye, EyeOff } from 'lucide-react'
+import { User, Lock, Save, Eye, EyeOff, Camera, Loader2 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { authAPI } from '../services/api'
+import { getImageUrl } from '../utils/helpers'
 import toast from 'react-hot-toast'
 
 const ProfilePage = () => {
@@ -13,6 +14,8 @@ const ProfilePage = () => {
   const [showOld, setShowOld] = useState(false)
   const [showNew, setShowNew] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  const fileInputRef = useRef(null)
 
   const {
     register: regInfo,
@@ -65,6 +68,41 @@ const ProfilePage = () => {
     }
   }
 
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Vui lòng chọn tệp hình ảnh')
+      return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Kích thước ảnh không được vượt quá 5MB')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('avatar', file)
+
+    setUploadingAvatar(true)
+    try {
+      const result = await updateUser(formData)
+      if (result.success) {
+        toast.success('Cập nhật ảnh đại diện thành công!')
+      }
+    } catch (error) {
+      toast.error('Không thể cập nhật ảnh đại diện')
+    } finally {
+      setUploadingAvatar(false)
+      if (e.target) e.target.value = ''
+    }
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-black text-gray-900 mb-6">Tài khoản của tôi</h1>
@@ -73,10 +111,44 @@ const ProfilePage = () => {
         <div className="lg:col-span-1 space-y-6">
           {/* User Avatar */}
           <div className="flex flex-col items-center text-center p-8 bg-white rounded-2xl border border-gray-100 shadow-sm">
-            <div className="w-24 h-24 rounded-full bg-primary-50 flex items-center justify-center mb-4 border-2 border-primary-100 p-1">
-              <div className="w-full h-full rounded-full bg-primary-600 flex items-center justify-center text-white text-3xl font-black italic">
-                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+            <div className="relative group mb-4">
+              <div className="w-24 h-24 rounded-full bg-primary-50 flex items-center justify-center border-2 border-primary-100 p-1 overflow-hidden relative">
+                {user?.avatar ? (
+                  <img 
+                    src={getImageUrl(user.avatar)} 
+                    alt={user.name} 
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-full bg-primary-600 flex items-center justify-center text-white text-3xl font-black italic">
+                    {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                  </div>
+                )}
+                
+                {uploadingAvatar && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-full">
+                    <Loader2 className="w-8 h-8 text-white animate-spin" />
+                  </div>
+                )}
               </div>
+              
+              <button 
+                type="button"
+                onClick={handleAvatarClick}
+                disabled={uploadingAvatar}
+                className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full border border-gray-100 shadow-md flex items-center justify-center text-gray-600 hover:text-primary-600 hover:scale-110 transition-all z-10"
+                title="Đổi ảnh đại diện"
+              >
+                <Camera className="w-4 h-4" />
+              </button>
+              
+              <input 
+                type="file"
+                ref={fileInputRef}
+                onChange={handleAvatarChange}
+                accept="image/*"
+                className="hidden"
+              />
             </div>
             <div>
               <h2 className="font-bold text-gray-900 text-lg">{user?.name}</h2>

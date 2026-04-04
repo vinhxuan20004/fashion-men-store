@@ -22,6 +22,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext'
 import { useCart } from '../../contexts/CartContext'
 import { categoryAPI } from '../../services/api'
+import { getImageUrl } from '../../utils/helpers'
 import ChatWidget from '../common/ChatWidget'
 
 const MainLayout = ({ children }) => {
@@ -194,14 +195,24 @@ const MainLayout = ({ children }) => {
               {/* User Menu */}
               {isAuthenticated ? (
                 <div ref={userMenuRef} className="relative">
-                  <button
+                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
                     className="flex items-center gap-2.5 p-1.5 pl-3 border border-slate-200 rounded-full hover:border-primary-300 transition-all duration-300 bg-white"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
-                      <span className="font-bold text-xs">
-                        {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                      </span>
+                    <div className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center overflow-hidden bg-slate-50 shadow-sm transition-transform hover:scale-105 active:scale-95 duration-300">
+                      {user?.avatar ? (
+                        <img 
+                          src={getImageUrl(user.avatar)} 
+                          alt={user.name} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white">
+                           <span className="font-bold text-xs uppercase italic drop-shadow-sm">
+                            {user?.name?.charAt(0) || 'U'}
+                          </span>
+                        </div>
+                      )}
                     </div>
                     <ChevronDown className={`hidden md:block w-4 h-4 text-slate-400 transition-transform duration-300 ${userMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
