@@ -62,8 +62,10 @@ export const CartProvider = ({ children }) => {
       const cartData = response.data.data?.cart || response.data.cart || response.data
       setCartItems(cartData.items || [])
       setCartId(cartData._id || cartData.id)
-      if (cartData.voucher) {
-        setVoucher(cartData.voucher)
+      if (cartData.appliedVoucher) {
+        setVoucher(cartData.appliedVoucher)
+      } else {
+        setVoucher(null)
       }
     } catch (error) {
       console.error('Failed to fetch cart:', error)
@@ -201,7 +203,7 @@ export const CartProvider = ({ children }) => {
   const applyVoucher = async (code) => {
     try {
       const response = await cartAPI.applyVoucher(code)
-      const voucherData = response.data.voucher || response.data
+      const voucherData = response.data.data?.voucher || response.data.voucher || response.data
       setVoucher(voucherData)
       toast.success('Áp dụng voucher thành công!')
       return { success: true, voucher: voucherData }

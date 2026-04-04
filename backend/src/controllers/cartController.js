@@ -13,7 +13,8 @@ const getCart = async (req, res, next) => {
         path: 'items.product',
         select: 'name slug images price salePrice variants isActive brand',
         populate: { path: 'category', select: 'name slug' },
-      });
+      })
+      .populate('appliedVoucher');
 
     if (!cart) {
       cart = await Cart.create({ user: req.user._id, items: [] });
@@ -215,6 +216,7 @@ const clearCart = async (req, res, next) => {
     }
 
     cart.items = [];
+    cart.appliedVoucher = null;
     await cart.save();
 
     return res.status(200).json({ success: true, message: 'Cart cleared.' });
@@ -267,6 +269,10 @@ const applyVoucher = async (req, res, next) => {
     }
 
     const discountAmount = calculateDiscount(voucher, subtotal);
+
+    // Save voucher to cart
+    cart.appliedVoucher = voucher._id;
+    await cart.save();
 
     return res.status(200).json({
       success: true,
