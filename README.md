@@ -85,5 +85,3 @@ mens-fashion-store/
 ```
 
 ---
-
-*Designed and engineered with passion by **Antigravity**.*
