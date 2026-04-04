@@ -1,0 +1,10 @@
+﻿MongoDB connected: localhost:27017/mens-fashion-store
+MongoDB connected.
+Found 5 categories.
+CAT_ID: 69ca112b380cbbc8abca04b9 | NAME: ├üo S╞í Mi | COUNT: 6
+CAT_ID: 69ca68b3937099be12cdb30e | NAME: ├üo Vest | COUNT: 5
+CAT_ID: 69ca68b3937099be12cdb313 | NAME: Quß║ºn ├éu | COUNT: 5
+CAT_ID: 69ca68b3937099be12cdb316 | NAME: Quß║ºn B├▓ | COUNT: 5
+CAT_ID: 69ca68b3937099be12cdb319 | NAME: Phß╗Ñ Kiß╗çn Nam | COUNT: 5
+
+TOTAL_PRODUCTS: 26
