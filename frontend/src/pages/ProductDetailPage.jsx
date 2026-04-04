@@ -70,6 +70,12 @@ const ProductDetailPage = () => {
       setSelectedVariant(variant)
       if (size) setSelectedSize(size)
       if (color) setSelectedColor(color)
+      
+      if (variant.stock === 0) {
+        toast.error('Phiên bản này hiện đã hết hàng, mời bạn chọn mẫu khác!', {
+          id: 'out-of-stock-toast'
+        })
+      }
     }
   }
 
@@ -282,14 +288,13 @@ const ProductDetailPage = () => {
                         return (
                           <button
                             key={size}
-                            onClick={() => hasStock && handleVariantSelect(size, selectedColor)}
-                            disabled={!hasStock}
+                            onClick={() => handleVariantSelect(size, selectedColor)}
                             className={`min-w-[50px] h-12 flex items-center justify-center rounded-xl font-black text-xs transition-all duration-300 border-2 ${
                               active
                                 ? 'bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-900/20'
                                 : hasStock
                                 ? 'bg-white border-slate-100 text-slate-600 hover:border-primary-400 hover:text-primary-600'
-                                : 'bg-slate-50 border-slate-50 text-slate-200 line-through cursor-not-allowed opacity-50'
+                                : 'bg-slate-50 border-slate-100 text-slate-300 line-through'
                             }`}
                           >
                             {size}
@@ -314,14 +319,13 @@ const ProductDetailPage = () => {
                         return (
                           <button
                             key={color}
-                            onClick={() => hasStock && handleVariantSelect(selectedSize, color)}
-                            disabled={!hasStock}
+                            onClick={() => handleVariantSelect(selectedSize, color)}
                             className={`group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 border-2 ${
                               active
                                 ? 'border-primary-600 bg-primary-50'
                                 : hasStock
                                 ? 'border-slate-50 bg-slate-50 hover:border-primary-200'
-                                : 'opacity-40 cursor-not-allowed grayscale'
+                                : 'border-slate-50 bg-slate-50 grayscale opacity-40'
                             }`}
                           >
                             {variant?.colorCode && (
