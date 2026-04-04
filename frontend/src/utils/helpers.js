@@ -102,5 +102,6 @@ export const slugify = (text) => {
 export const getImageUrl = (imagePath) => {
   if (!imagePath) return '/placeholder-product.jpg'
   if (imagePath.startsWith('http')) return imagePath
-  return `http://localhost:5000${imagePath}`
+  // Use relative path so Vite proxy handles it correctly
+  return imagePath
 }

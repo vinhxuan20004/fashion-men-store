@@ -9,7 +9,7 @@ import ProductCard from '../components/product/ProductCard'
 import ProductImageGallery from '../components/product/ProductImageGallery'
 import StarRating from '../components/product/StarRating'
 import LoadingSpinner from '../components/common/LoadingSpinner'
-import { formatCurrency, formatDate } from '../utils/helpers'
+import { formatCurrency, formatDate, getImageUrl } from '../utils/helpers'
 import toast from 'react-hot-toast'
 
 const ProductDetailPage = () => {
@@ -477,6 +477,15 @@ const ProductDetailPage = () => {
                         </div>
                       </div>
                       <p className="text-sm text-slate-500 font-medium leading-relaxed italic">"{review.comment}"</p>
+                      {review.images && review.images.length > 0 && (
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          {review.images.map((img, i) => (
+                            <div key={i} className="group/img relative w-20 h-24 rounded-xl overflow-hidden border border-slate-100 shadow-sm transition-all hover:scale-105 cursor-zoom-in">
+                               <img src={getImageUrl(img)} alt="" className="w-full h-full object-cover" />
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))
                 ) : (

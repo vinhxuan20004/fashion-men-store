@@ -19,7 +19,7 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { reviewAPI } from '../../services/api'
-import { formatDate } from '../../utils/helpers'
+import { formatDate, getImageUrl } from '../../utils/helpers'
 import LoadingSpinner from '../../components/common/LoadingSpinner'
 import Pagination from '../../components/common/Pagination'
 import toast from 'react-hot-toast'
@@ -191,7 +191,7 @@ const AdminReviewsPage = () => {
                    {review.images && review.images.length > 0 && (
                       <div className="flex flex-wrap gap-2.5 pt-1">
                          {review.images.map((img, i) => (
-                            <img key={i} src={img} alt="" className="w-14 h-18 object-cover rounded-lg border border-slate-100 shadow-sm hover:scale-105 transition-transform cursor-pointer" />
+                            <img key={i} src={getImageUrl(img)} alt="" className="w-14 h-18 object-cover rounded-lg border border-slate-100 shadow-sm hover:scale-105 transition-transform cursor-pointer" />
                          ))}
                       </div>
                    )}
