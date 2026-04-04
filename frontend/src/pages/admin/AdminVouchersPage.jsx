@@ -25,6 +25,11 @@ import { formatCurrency, formatDate } from '../../utils/helpers'
 import LoadingSpinner from '../../components/common/LoadingSpinner'
 import Pagination from '../../components/common/Pagination'
 import toast from 'react-hot-toast'
+import DatePicker, { registerLocale } from 'react-datepicker'
+import vi from 'date-fns/locale/vi'
+import 'react-datepicker/dist/react-datepicker.css'
+
+registerLocale('vi', vi)
 
 const AdminVouchersPage = () => {
   const [vouchers, setVouchers] = useState([])
@@ -398,28 +403,32 @@ const AdminVouchersPage = () => {
                     </div>
                  </div>
 
-                 <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-2 gap-5">
                     <div className="space-y-1.5">
                        <label className="text-xs font-medium text-slate-400 capitalize ml-1">Ngày bắt đầu</label>
-                       <input
-                         required
-                         type="date"
-                         value={formData.startDate}
-                         onChange={(e) => setFormData({...formData, startDate: e.target.value})}
+                       <DatePicker
+                         selected={formData.startDate ? new Date(formData.startDate) : null}
+                         onChange={(date) => setFormData({...formData, startDate: date ? date.toISOString().split('T')[0] : ''})}
+                         dateFormat="dd/MM/yyyy"
+                         locale="vi"
                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-sm font-normal text-slate-600 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:bg-white transition-all shadow-inner"
+                         placeholderText="Ngày bắt đầu"
+                         required
                        />
                     </div>
                     <div className="space-y-1.5">
                        <label className="text-xs font-medium text-slate-400 capitalize ml-1">Ngày kết thúc</label>
-                       <input
-                         required
-                         type="date"
-                         value={formData.endDate}
-                         onChange={(e) => setFormData({...formData, endDate: e.target.value})}
+                       <DatePicker
+                         selected={formData.endDate ? new Date(formData.endDate) : null}
+                         onChange={(date) => setFormData({...formData, endDate: date ? date.toISOString().split('T')[0] : ''})}
+                         dateFormat="dd/MM/yyyy"
+                         locale="vi"
                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-sm font-normal text-slate-600 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:bg-white transition-all shadow-inner"
+                         placeholderText="Ngày kết thúc"
+                         required
                        />
                     </div>
-                 </div>
+                  </div>
 
                  <div className="pt-6 border-t border-slate-100 flex items-center justify-end gap-5">
                     <button 
