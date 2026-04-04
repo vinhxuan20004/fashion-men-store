@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import { 
   Star, 
   MessageSquare, 
@@ -147,23 +148,40 @@ const AdminReviewsPage = () => {
                       </div>
                    </div>
 
-                   <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 group-hover:bg-white transition-all">
-                      <div className="flex items-center gap-2.5">
-                         <ShoppingBag className="w-4 h-4 text-primary-600 shrink-0" />
-                         <span className="text-[11px] font-semibold text-slate-700 capitalize truncate">{review.product?.name}</span>
-                      </div>
-                   </div>
+                   {review.product ? (
+                     <Link 
+                       to={`/products/${review.product.slug || review.product._id}`}
+                       target="_blank"
+                       className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 group-hover:bg-primary-50 group-hover:border-primary-200 transition-all block w-full"
+                     >
+                        <div className="flex items-center gap-2.5">
+                           <ShoppingBag className="w-4 h-4 text-primary-600 shrink-0" />
+                           <span className="text-[11px] font-semibold text-slate-700 capitalize truncate">{review.product.name}</span>
+                           <ExternalLink className="w-3 h-3 text-slate-300 ml-auto opacity-0 group-hover:opacity-100 transition-all" />
+                        </div>
+                     </Link>
+                   ) : (
+                     <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 opacity-60">
+                        <div className="flex items-center gap-2.5">
+                           <XCircle className="w-4 h-4 text-slate-400 shrink-0" />
+                           <span className="text-[11px] font-semibold text-slate-400 uppercase italic">Sản phẩm đã bị xóa</span>
+                        </div>
+                     </div>
+                   )}
                 </div>
 
                 {/* Middle: Content */}
                 <div className="flex-1 space-y-5 pt-1">
-                   <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                         <Star 
-                           key={s} 
-                           className={`w-4 h-4 ${s <= review.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-100'}`} 
-                         />
-                      ))}
+                   <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-0.5">
+                         {[1, 2, 3, 4, 5].map((s) => (
+                            <Star 
+                              key={s} 
+                              className={`w-3.5 h-3.5 ${s <= review.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-100'}`} 
+                            />
+                         ))}
+                      </div>
+                      <span className="text-xs font-black text-slate-900">{review.rating} / 5</span>
                    </div>
                    
                    <p className="text-sm font-normal text-slate-600 leading-relaxed italic">

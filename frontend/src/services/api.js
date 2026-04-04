@@ -144,10 +144,11 @@ export const orderAPI = {
 }
 
 export const reviewAPI = {
-  create: (data) => api.post('/reviews', data),
+  create: (productId, data) => api.post(`/reviews/product/${productId}`, data),
   getProductReviews: (productId, params) =>
     api.get(`/reviews/product/${productId}`, { params }),
-  approve: (id) => api.put(`/reviews/${id}/approve`),
+  getAll: (params) => api.get('/reviews/admin/all', { params }),
+  approve: (id) => api.patch(`/reviews/${id}/approve`),
   delete: (id) => api.delete(`/reviews/${id}`),
   getUserReviews: () => api.get('/reviews/my')
 }

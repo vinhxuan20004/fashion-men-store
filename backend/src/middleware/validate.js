@@ -8,9 +8,10 @@ const { body, validationResult } = require('express-validator');
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    const errorMessages = errors.array().map((e) => e.msg);
     return res.status(422).json({
       success: false,
-      message: 'Validation failed',
+      message: errorMessages[0],
       errors: errors.array().map((e) => ({ field: e.path, message: e.msg })),
     });
   }
@@ -167,17 +168,17 @@ const orderValidation = [
 
 const reviewValidation = [
   body('rating')
-    .notEmpty().withMessage('Rating is required')
-    .isInt({ min: 1, max: 5 }).withMessage('Rating must be between 1 and 5'),
+    .notEmpty().withMessage('Vui lòng chọn số sao đánh giá')
+    .isInt({ min: 1, max: 5 }).withMessage('Đánh giá phải từ 1 đến 5 sao'),
 
   body('comment')
     .trim()
-    .notEmpty().withMessage('Comment is required')
-    .isLength({ min: 10, max: 1000 }).withMessage('Comment must be between 10 and 1000 characters'),
+    .notEmpty().withMessage('Vui lòng nhập nội dung đánh giá')
+    .isLength({ min: 1, max: 1000 }).withMessage('Nội dung đánh giá không được để trống và tối đa 1000 ký tự'),
 
   body('orderId')
-    .notEmpty().withMessage('Order ID is required')
-    .isMongoId().withMessage('Invalid order ID'),
+    .optional()
+    .isMongoId().withMessage('Mã đơn hàng không hợp lệ'),
 
   handleValidationErrors,
 ];

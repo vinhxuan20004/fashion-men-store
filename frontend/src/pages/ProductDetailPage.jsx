@@ -90,8 +90,7 @@ const ProductDetailPage = () => {
   const onReviewSubmit = async (data) => {
     setSubmitReview(true)
     try {
-      await reviewAPI.create({
-        productId: product._id,
+      await reviewAPI.create(product._id, {
         rating: parseInt(data.rating),
         comment: data.comment
       })

@@ -18,25 +18,38 @@ const createReview = async (req, res, next) => {
     }
 
     // Verify the order is DELIVERED and belongs to the user
-    const order = await Order.findOne({
-      _id: orderId,
-      user: req.user._id,
-      orderStatus: 'DELIVERED',
-      'items.product': productId,
-    });
+    // If orderId is not provided, try to find a valid order for this user and product
+    let order;
+    if (orderId) {
+      order = await Order.findOne({
+        _id: orderId,
+        user: req.user._id,
+        orderStatus: 'DELIVERED',
+        'items.product': productId,
+      });
+    } else {
+      // Find the most recent delivered order that contains this product
+      order = await Order.findOne({
+        user: req.user._id,
+        orderStatus: 'DELIVERED',
+        'items.product': productId,
+      }).sort({ createdAt: -1 });
+    }
 
     if (!order) {
       return res.status(403).json({
         success: false,
-        message: 'You can only review products from your delivered orders.',
+        message: 'Bạn cần mua hàng và nhận hàng thành công để đánh giá sản phẩm này.',
       });
     }
 
-    // Check if already reviewed
+    const finalOrderId = orderId || order._id;
+
+    // Check if already reviewed for this specific order
     const existingReview = await Review.findOne({
       user: req.user._id,
       product: productId,
-      order: orderId,
+      order: finalOrderId,
     });
 
     if (existingReview) {
@@ -48,7 +61,7 @@ const createReview = async (req, res, next) => {
     const review = await Review.create({
       user: req.user._id,
       product: productId,
-      order: orderId,
+      order: finalOrderId,
       rating: Number(rating),
       comment,
       images,
