@@ -304,17 +304,25 @@ const updateOrderStatus = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Order not found.' });
     }
 
-    // Validate status transitions: Allow jumping forward only
+    // Validate status transitions: Allow same status or jumping forward only
     const statusOrder = ['PENDING', 'CONFIRMED', 'SHIPPING', 'DELIVERED', 'CANCELLED'];
     const currentIndex = statusOrder.indexOf(order.orderStatus);
     const targetIndex = statusOrder.indexOf(status);
+
+    if (status === order.orderStatus) {
+      return res.status(200).json({
+        success: true,
+        message: `Order is already ${status}.`,
+        data: { order },
+      });
+    }
 
     // Cancel is always allowed from PENDING, CONFIRMED, SHIPPING
     if (status === 'CANCELLED') {
       if (['DELIVERED', 'CANCELLED'].includes(order.orderStatus)) {
         return res.status(400).json({ success: false, message: `Cannot cancel an order that is ${order.orderStatus}.` });
       }
-    } else if (targetIndex <= currentIndex) {
+    } else if (targetIndex < currentIndex) {
       return res.status(400).json({
         success: false,
         message: `Cannot change status from ${order.orderStatus} to ${status}. Only forward transitions are allowed.`,
