@@ -127,7 +127,7 @@ export const cartAPI = {
   updateItem: (itemId, data) => api.put(`/cart/items/${itemId}`, data),
   removeItem: (itemId) => api.delete(`/cart/items/${itemId}`),
   clearCart: () => api.delete('/cart'),
-  applyVoucher: (code) => api.post('/cart/voucher', { code })
+  applyVoucher: (code) => api.post('/cart/apply-voucher', { code })
 }
 
 export const siteAPI = {
