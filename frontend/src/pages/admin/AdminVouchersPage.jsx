@@ -103,18 +103,28 @@ const AdminVouchersPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true)
+    
+    // Normalize data (ensure values are numbers/nulls)
+    const processedData = {
+      ...formData,
+      value: Number(formData.value),
+      minOrderValue: Number(formData.minOrderValue),
+      maxDiscount: formData.type === 'FIXED' ? null : (formData.maxDiscount ? Number(formData.maxDiscount) : null),
+      usageLimit: formData.usageLimit ? Number(formData.usageLimit) : null
+    }
+
     try {
       if (editingVoucher) {
-        await voucherAPI.update(editingVoucher._id, formData)
+        await voucherAPI.update(editingVoucher._id, processedData)
         toast.success('Cập nhật voucher thành công')
       } else {
-        await voucherAPI.create(formData)
+        await voucherAPI.create(processedData)
         toast.success('Tạo voucher thành công')
       }
       setShowModal(false)
       fetchVouchers()
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra')
+      toast.error(error.response?.data?.message || 'Thông tin voucher chưa hợp lệ')
     } finally {
       setSubmitting(false)
     }
