@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    font-style: normal !important;
+    text-transform: none !important; /* Reset all transforms to follow source/js case */
+  }
+  
+  /* Global font enforcement for most pages */
+  body:not(.is-auth-page) * {
+    font-family: "Be Vietnam Pro", sans-serif !important;
+  }
+
+  /* Bold ONLY for main headings (h1, h2, h3) and explicitly forced elements, normal for everything else */
+  body:not(.is-auth-page) *:not(h1):not(h2):not(h3):not(.force-bold):not(.price-bold) {
+    font-weight: 400 !important;
+  }
+  body:not(.is-auth-page) h1, 
+  body:not(.is-auth-page) h2, 
+  body:not(.is-auth-page) h3,
+  .force-bold,
+  .price-bold {
+    font-weight: 700 !important;
+    text-transform: capitalize !important; /* Titles capitalize each word */
+  }
+
+  /* Specific elements that MUST capitalize (Product names, Brands) */
+  .title-case {
+    text-transform: capitalize !important;
+  }
+
+  /* Specific elements that MUST NOT capitalize (Email, slugs) */
+  .no-case {
+    text-transform: none !important;
+  }
+
+  /* Exclude auth pages from global enforcement */
+  body.is-auth-page, body.is-auth-page * {
+    font-family: sans-serif !important;
+    text-transform: none !important;
+    font-style: normal !important;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans font-normal text-slate-900 bg-slate-50 antialiased;
+  }
+}
+
+@layer components {
+  /* Buttons - Vercel Style */
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-bold py-2.5 px-6 rounded-lg transition-all duration-200 shadow-sm active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed tracking-tight;
+  }
+  .btn-secondary {
+    @apply bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 font-bold py-2.5 px-6 rounded-lg transition-all duration-200 active:scale-[0.98] shadow-sm tracking-tight;
+  }
+  .btn-outline {
+    @apply border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold py-2.5 px-6 rounded-lg transition-all duration-200 active:scale-[0.98] tracking-tight;
+  }
+  
+  /* Inputs */
+  .input-field {
+    @apply w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-sans text-slate-900 placeholder-slate-400 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-primary-100 focus:border-primary-500 focus:bg-white;
+  }
+  
+  /* Cards */
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-slate-100 p-6 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/50 hover:border-primary-100;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+  .glass-dark {
+    @apply bg-slate-900/80 backdrop-blur-lg border border-white/10;
+  }
+
+  /* Layout */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-900;
+  }
+  
+  .bg-gradient-premium {
+    @apply bg-gradient-to-tr from-primary-600 via-primary-700 to-indigo-900;
+  }
+
+  .price-bold {
+    @apply text-slate-900 tracking-tight;
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2.5s infinite linear;
+  }
+}
+
