@@ -345,23 +345,28 @@ const updateUserAdmin = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
 
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (phone !== undefined) updateData.phone = phone;
+
     if (email && email !== user.email) {
       const existing = await User.findOne({ email });
       if (existing) {
         return res.status(409).json({ success: false, message: 'Email is already taken.' });
       }
-      user.email = email;
+      updateData.email = email;
     }
 
-    if (name !== undefined) user.name = name;
-    if (phone !== undefined) user.phone = phone;
-
-    await user.save();
+    const updatedUser = await User.findByIdAndUpdate(
+      id, 
+      { $set: updateData }, 
+      { new: true, runValidators: true }
+    );
 
     return res.status(200).json({
       success: true,
       message: 'User details updated successfully.',
-      data: { user },
+      data: { user: updatedUser },
     });
   } catch (err) {
     next(err);
