@@ -11,6 +11,8 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+backend/.env
+frontend/.env
 
 # Build outputs
 dist/
@@ -37,7 +39,8 @@ Thumbs.db
 *.tmp
 *.temp
 coverage/
+uploads/
 
 # Specific project files
 java-backend/target/
-f:\mens-fashion-store\mens-fashion-store.rar
+mens-fashion-store.rar
