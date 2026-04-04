@@ -5,14 +5,14 @@ import { Filter, X, ChevronDown, Check } from 'lucide-react'
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL']
 const COLORS = [
   { name: 'Trắng', value: 'Trắng', code: '#FFFFFF' },
-  { name: 'Đen', value: 'Black', code: '#000000' },
-  { name: 'Xám', value: 'Grey', code: '#9CA3AF' },
+  { name: 'Đen', value: 'Đen', code: '#000000' },
+  { name: 'Xám', value: 'Xám', code: '#9CA3AF' },
   { name: 'Navy', value: 'Navy', code: '#1E3A5F' },
-  { name: 'Xanh', value: 'Blue', code: '#3B82F6' },
-  { name: 'Đỏ', value: 'Red', code: '#EF4444' },
-  { name: 'Nâu', value: 'Brown', code: '#92400E' },
+  { name: 'Xanh', value: 'Xanh', code: '#3B82F6' },
+  { name: 'Đỏ', value: 'Đỏ', code: '#EF4444' },
+  { name: 'Nâu', value: 'Nâu', code: '#92400E' },
   { name: 'Be', value: 'Beige', code: '#D4B896' },
-  { name: 'Than', value: 'Charcoal', code: '#36454F' }
+  { name: 'Than', value: 'Than', code: '#36454F' }
 ]
 
 const FilterSection = ({ title, children, defaultOpen = true }) => {

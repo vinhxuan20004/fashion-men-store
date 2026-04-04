@@ -18,6 +18,8 @@ const getAll = async (req, res, next) => {
       maxPrice,
       search,
       sort = '-createdAt',
+      sortBy,
+      sortOrder,
       featured,
       brand,
       isActive,
@@ -48,9 +50,9 @@ const getAll = async (req, res, next) => {
       filter['variants.size'] = { $in: sizes };
     }
 
-    // Color filter - Support multiple colors & Case-insensitive
+    // Color filter - Support multiple colors & Lenient partial match
     if (color) {
-      const colors = color.split(',').map((c) => new RegExp(`^${c.trim()}$`, 'i'));
+      const colors = color.split(',').map((c) => new RegExp(`${c.trim()}`, 'i'));
       filter['variants.color'] = { $in: colors };
     }
 
@@ -83,16 +85,31 @@ const getAll = async (req, res, next) => {
     }
 
     // Build sort
-    const allowedSorts = {
-      '-createdAt': { createdAt: -1 },
-      createdAt: { createdAt: 1 },
-      '-price': { price: -1 },
-      price: { price: 1 },
-      '-soldCount': { soldCount: -1 },
-      '-averageRating': { ratingSum: -1 },
-      name: { name: 1 },
-    };
-    const sortObj = allowedSorts[sort] || { createdAt: -1 };
+    let sortObj = { createdAt: -1 };
+    
+    if (sortBy) {
+      const order = sortOrder === 'asc' || sortOrder === '1' ? 1 : -1;
+      const fieldMap = {
+        price: 'price',
+        createdAt: 'createdAt',
+        soldCount: 'soldCount',
+        averageRating: 'ratingSum',
+        name: 'name'
+      };
+      const dbField = fieldMap[sortBy] || sortBy;
+      sortObj = { [dbField]: order };
+    } else {
+      const allowedSorts = {
+        '-createdAt': { createdAt: -1 },
+        createdAt: { createdAt: 1 },
+        '-price': { price: -1 },
+        price: { price: 1 },
+        '-soldCount': { soldCount: -1 },
+        '-averageRating': { ratingSum: -1 },
+        name: { name: 1 },
+      };
+      sortObj = allowedSorts[sort] || { createdAt: -1 };
+    }
 
     const [products, total] = await Promise.all([
       Product.find(filter)
