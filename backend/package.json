@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "predev": "powershell -ExecutionPolicy Bypass -File ./kill-port.ps1 5000",
+    "predev": "powershell -Command \"Get-NetTCPConnection -LocalPort 5000 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }\"",
     "dev": "nodemon server.js",
     "seed": "node src/utils/seeder.js",
     "clear": "node src/utils/clearData.js"
